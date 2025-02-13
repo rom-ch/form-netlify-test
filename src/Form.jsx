@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { checkEmail, checkMessage, checkName } from './validators';
 
+const encode = data => {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
+};
+
 export function Form() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -25,7 +31,11 @@ export function Form() {
       emailCheckResult.length === 0 &&
       messageCheckResult.length === 0
     ) {
-      alert('Success');
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode({ 'form-name': 'contact', name, email, message }),
+      });
     }
   }
 
